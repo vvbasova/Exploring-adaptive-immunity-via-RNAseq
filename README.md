@@ -58,7 +58,7 @@ in TCGA-GBM project (insignificant correlations masked with gray)
 ![cluster](./plots/TCGA-GBM_clustermap.png)
 
 3. Heatmap of correlation between TCR V-genes and IGH С-genes
-in TCGA-GBM project (insignificant correlations masked with gray)
+in TCGA-DLBC project (insignificant correlations masked with gray)
 
 ![heat](./plots/TCGA-DLBC_heatmap.png)
 
