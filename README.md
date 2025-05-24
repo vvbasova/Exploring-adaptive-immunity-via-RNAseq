@@ -56,7 +56,7 @@ To assess the antigen specificity of T-cell receptors, we utilized the VDJdb dat
 
 We investigated the usage of T cell receptor (TCR) δ-chain variable genes (TRDV) to characterize the distribution of γδ T cells—an unconventional T cell subset known for their rapid immune response and ability to recognize antigens in an MHC-independent manner.
 
-In healthy tissues, TRDV1 expression is typically dominant, while TRDV2 is enriched primarily in blood. Interestingly, in our data, the three cancer types with the highest relative TRDV2 usage were glioblastoma, leukemia, and glioma. These findings are consistent with previous studies reporting preferential infiltration of γδ T cells, especially the Vγ9Jγ2–Vδ2 subtype, into glioblastoma multiforme (GBM), potentially contributing to anti-tumor immune responses [4], [5].
+In healthy tissues, TRDV1 expression is typically dominant, while TRDV2 is enriched primarily in blood. In our data, the three cancer types with the highest relative TRDV2 usage were glioblastoma (GBM), leukemia (LAML), and glioma (LGG). These findings are consistent with previous studies reporting preferential infiltration of γδ T cells, especially the Vγ9Jγ2–Vδ2 subtype, into glioblastoma multiforme (GBM), potentially contributing to anti-tumor immune responses [4], [5].
 
 ![trdv_hist](./plots/TRDV_hist.png)
 ### Antigen Specificity Using TCR–Epitope Mapping
