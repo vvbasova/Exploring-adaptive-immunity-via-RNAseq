@@ -6,6 +6,79 @@
 
 **Supervisors:** Daniil Luppov, Mikhail Shugai
 
+## Table of context
+
+- [Project description](#project-description)
+  - [Project goal and objectives](#project-goal-and-objectives)
+  - [Data](#data)
+  - [Results](#results)
+  - [References](#references)
+- [Project navigation](#project-navigation)
+---
+
+# Project description
+
+---
+
+## Project goal and objectives
+
+---
+
+Our goals and objectives!!!
+
+## Data
+
+---
+TCGA, VDJdb and so on
+
+## Results
+
+---
+
+Results and plots
+
+## References
+
+---
+
+References for databases and literature
+
+# Project navigation
+
+---
+
+```angular2html
+Exploring-adaptive-immunity-via-RNAseq/
+│
+├── MIXCR_healthy_tissues/           # Calculated CSV files with MiXCR clone data for healthy tissues
+│   ├── brain_clones.csv
+│   ├── colon_clones.csv
+│   ├── eye_clones.csv
+│   └── skin_clones.csv
+│
+├── notebooks/                       # Jupyter Notebooks with main analysis
+│   ├── 1_airr_data_statistical_analysis.ipynb    # Statistical analysis of TCGA repertoire data
+│   ├── 2_vdjdb_analysis.ipynb                    # Analysis using VDJdb epitope mapping
+│   └── 3_healthy_tissues.ipynb                   # Analysis of healthy tissues repertoire extracted via MIXCR
+│
+├── plots/                           # Generated plots and figures
+│
+├── scripts/                         # Python and R scripts used in the analysis
+│   ├── __init__.py                  
+│   ├── correlation_functions.py     # Functions for computing and plotting correlation matrices
+│   ├── regression_functions.py      # Regression functions for gene expression vs cancer types
+│   ├── survival_plots.R             # R script for survival analysis visualizations
+│   └── vdjdb_functions.py           # Enrichment and overlap analysis with VDJdb epitopes
+│
+├── R.requirements.txt               # List of R packages needed for R scripts
+├── requirements.txt                 # Python dependencies
+└── README.md                        # Project overview 
+
+```
+
+
+# OLD DATA
+
 ---
 
 - [Plot A](#plot-a)
