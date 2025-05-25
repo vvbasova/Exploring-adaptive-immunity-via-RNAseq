@@ -2,9 +2,9 @@
 
 ---
 
-**Students:** Victoria Basova, Ryazantsev Dmitrii
+**Students:** [Victoria Basova](https://github.com/vvbasova), [Ryazantsev Dmitriy](https://github.com/anode112)
 
-**Supervisors:** Daniil Luppov, Mikhail Shugai
+**Supervisors:** [Daniil Luppov](https://github.com/VEK239), [Elizaveta Vlasova](https://github.com/VEK239), [Mikhail Shugai](https://github.com/mikessh)
 
 ## Table of context
 
@@ -47,6 +47,8 @@ Cancer-related immune repertoires were extracted  TCGA (The Cancer Genome Atlas)
 
 To assess the antigen specificity of T-cell receptors, we utilized the VDJdb database [3], which contains curated TCR sequences with known epitope specificities. 
 
+<img src="./plots/TCGA_all_cancers_counts.jpg" alt="eda" width="60%" />
+
 ## Results
 
 ---
@@ -85,6 +87,24 @@ Moreover, recent literature suggests a dual role for MAIT cells in cancer: while
 
 ![mait](./plots/mait.png)
 
+### CDR3 clustering and MAIT abundance
+Clustering analysis resulted in 206 sampled CDR3 clusters with a significant size (n >10). Cluster sampling revealed MAIT cell dominance (72% infiltration) in the largest identified cluster, with renal cancer prevalence.
+
+These multi-cancer associations may represent biologically meaningful cross-reactive immune signatures requiring validation in larger, cancer-stratified cohorts.
+
+![maitclust](./plots/top_clusters_TRA.png)
+
+> N MAIT cells in cluster 5807 with size 193: 139  
+> MAIT abundance in cluster 5807 is: 72%
+
+CDR3 logo for MAIT-infiltrated cluster.
+
+![logo](./plots/logo_top_cluster_TRA_mait.jpg)
+
+The absence of large CDR3 clusters uniquely associated with individual cancer types may reflect either limited sensitivity of our approach to detect rare cancer-specific clonotypes or the fundamental absence of universal, cancer type-specific immune  T-cells’ repertoires. While clusters containing 2–3 cancer types were identified, their small sizes lacked sufficient statistical power to establish associations. These multi-cancer associations may represent either technical artifacts or biologically meaningful cross-reactive immune signatures requiring validation in larger, cancer-stratified cohorts.
+
+
+
 ## References
 
 ---
@@ -122,9 +142,14 @@ Exploring-adaptive-immunity-via-RNAseq/
 │   └── skin_clones.csv
 │
 ├── notebooks/                       # Jupyter Notebooks with main analysis
+│   ├── data/                                     # Tables from the analysis
 │   ├── 1_airr_data_statistical_analysis.ipynb    # Statistical analysis of TCGA repertoire data
 │   ├── 2_vdjdb_analysis.ipynb                    # Analysis using VDJdb epitope mapping
-│   └── 3_healthy_tissues.ipynb                   # Analysis of healthy tissues repertoire extracted via MIXCR
+│   ├── 3_healthy_tissues.ipynb                   # Analysis of healthy tissues repertoire extracted via MIXCR
+│   ├── 4_filter_deconvolution.ipynb              # Get one type of deconvolution and filter it
+│   ├── 5_correlate_deconvs.ipynb                 # Correlation deconvolution with gene usage
+│   ├── 6_high_corr_analysis_ALL.ipynb            # Analysis on high correlations
+│   └── 7_clustering-TRA.ipynb                    # CDR3 clustering on TRA
 │
 ├── plots/                           # Generated plots and figures
 │
@@ -133,7 +158,8 @@ Exploring-adaptive-immunity-via-RNAseq/
 │   ├── correlation_functions.py     # Functions for computing and plotting correlation matrices
 │   ├── regression_functions.py      # Regression functions for gene expression vs cancer types
 │   ├── survival_plots.R             # R script for survival analysis visualizations
-│   └── vdjdb_functions.py           # Enrichment and overlap analysis with VDJdb epitopes
+│   ├── vdjdb_functions.py           # Enrichment and overlap analysis with VDJdb epitopes
+│   └── mixcr_slurm.sh               # Get repertoires from RNA-seq tissues via SLURM queue
 │
 ├── R.requirements.txt               # List of R packages needed for R scripts
 ├── requirements.txt                 # Python dependencies
