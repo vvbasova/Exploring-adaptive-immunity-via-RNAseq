@@ -1,21 +1,20 @@
 import os
 import glob
+import itertools
+
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
-import itertools
-
-from itertools import product
 from scipy.stats import pearsonr
 from statsmodels.stats.multitest import multipletests
 
+CORRELATION_THRESHOLD = 0.65
+P_VALUE_THRESHOLD = 0.05
+
 
 def correlation_table_maker_cross(
-    df1: pd.DataFrame,
-    df2: pd.DataFrame,
-    localization: str,
-    output_dir: str
+    df1: pd.DataFrame, df2: pd.DataFrame, localization: str, output_dir: str
 ) -> None:
     """
     Calculates pairwise Pearson correlations between columns of two dataframes
@@ -30,7 +29,7 @@ def correlation_table_maker_cross(
     cols1 = df1.columns
     cols2 = df2.columns
 
-    combinations = list(product(cols1, cols2))
+    combinations = list(itertools.product(cols1, cols2))
     results = []
 
     for gene1, gene2 in combinations:
@@ -40,11 +39,12 @@ def correlation_table_maker_cross(
             corr, pval = np.nan, np.nan
         results.append((gene1, gene2, corr, pval))
 
-    results_df = pd.DataFrame(results, columns=['Var1', 'Var2', 'correlation', 'p_value'])
-
-    results_df['p_adj'] = multipletests(results_df['p_value'], method='fdr_bh')[1]
-    results_df['-log10(p_adj)'] = -np.log10(results_df['p_adj'])
-    results_df['pair'] = results_df['Var1'] + ' / ' + results_df['Var2']
+    results_df = pd.DataFrame(
+        results, columns=["Var1", "Var2", "correlation", "p_value"]
+    )
+    results_df["p_adj"] = multipletests(results_df["p_value"], method="fdr_bh")[1]
+    results_df["-log10(p_adj)"] = -np.log10(results_df["p_adj"])
+    results_df["pair"] = results_df["Var1"] + " / " + results_df["Var2"]
 
     output_dir = os.path.expanduser(output_dir)
     os.makedirs(output_dir, exist_ok=True)
@@ -52,9 +52,7 @@ def correlation_table_maker_cross(
 
 
 def process_localizations(
-    df1: pd.DataFrame,
-    df2: pd.DataFrame,
-    output_dir: str
+    df1: pd.DataFrame, df2: pd.DataFrame, output_dir: str
 ) -> None:
     """
     Splits data by localization ('project_id') and computes correlation
@@ -65,13 +63,13 @@ def process_localizations(
         df2 (pd.DataFrame): Second dataframe with 'project_id' and 'sample' columns.
         output_dir (str): Directory to save correlation CSVs.
     """
-    localizations = df1['project_id'].unique()
+    localizations = df1["project_id"].unique()
 
     for loco in localizations:
-        df_loco1 = df1[df1['project_id'] == loco].copy()
-        df_loco2 = df2[df2['project_id'] == loco].copy()
+        df_loco1 = df1[df1["project_id"] == loco].copy()
+        df_loco2 = df2[df2["project_id"] == loco].copy()
 
-        drop_cols = ['project_id', 'sample']
+        drop_cols = ["project_id", "sample"]
         df_loco1 = df_loco1.drop(columns=[col for col in drop_cols if col in df_loco1])
         df_loco2 = df_loco2.drop(columns=[col for col in drop_cols if col in df_loco2])
 
@@ -96,8 +94,8 @@ def make_clustermaps(correlation_dir: str) -> None:
 
     for file_path in csv_files:
         key = os.path.splitext(os.path.basename(file_path))[0]
-
         df = pd.read_csv(file_path)
+
         pivot_table = df.pivot(index="Var1", columns="Var2", values="correlation")
         p_adj_table = df.pivot(index="Var1", columns="Var2", values="p_adj")
 
@@ -113,14 +111,10 @@ def make_clustermaps(correlation_dir: str) -> None:
         mask = filtered_p_adj_table >= 0.05
 
         cmap = sns.diverging_palette(240, 10, as_cmap=True)
-        cmap.set_bad(color='lightgrey')
+        cmap.set_bad(color="lightgrey")
 
         clustergrid = sns.clustermap(
-            filtered_pivot_table,
-            cmap=cmap,
-            mask=mask,
-            linewidths=0.5,
-            vmin=-1, vmax=1
+            filtered_pivot_table, cmap=cmap, mask=mask, linewidths=0.5, vmin=-1, vmax=1
         )
 
         clustergrid.fig.suptitle(f"{key}", fontsize=16)
@@ -178,7 +172,7 @@ def make_heatmaps(correlation_dir: str) -> None:
         pivot_table = pivot_table.fillna(0)
 
         cmap = sns.color_palette("coolwarm", as_cmap=True)
-        cmap.set_bad(color='lightgrey')
+        cmap.set_bad(color="lightgrey")
 
         plt.figure(figsize=(12, 6))
         ax = sns.heatmap(
@@ -186,10 +180,10 @@ def make_heatmaps(correlation_dir: str) -> None:
             cmap=cmap,
             mask=mask,
             linewidths=0.3,
-            linecolor='white',
-            cbar_kws={'label': 'Correlation'},
+            linecolor="white",
+            cbar_kws={"label": "Correlation"},
             vmin=-1,
-            vmax=1
+            vmax=1,
         )
 
         ax.set_title(f"{project_id}", fontsize=14)
@@ -203,20 +197,23 @@ def make_heatmaps(correlation_dir: str) -> None:
         plt.savefig(output_path, dpi=150)
         plt.close()
 
-        
-CORRELATION_THRESHOLD = 0.65
-P_VALUE_THRESHOLD = 0.05
 
 def load_significant_pairs(file_path: str) -> set:
-    """Load and filter significant correlation pairs from CSV file."""
-    df = pd.read_csv(file_path, sep=',') 
-    filtered = df[(df['correlation'].abs() > CORRELATION_THRESHOLD) & (df['p_adj'] < P_VALUE_THRESHOLD)]
-    return set(zip(filtered['Var1'], filtered['Var2']))
+    """
+    Load and filter significant correlation pairs from CSV file.
+    """
+    df = pd.read_csv(file_path, sep=",")
+    filtered = df[
+        (df["correlation"].abs() > CORRELATION_THRESHOLD)
+        & (df["p_adj"] < P_VALUE_THRESHOLD)
+    ]
+    return set(zip(filtered["Var1"], filtered["Var2"]))
 
 
 def plot_similarity_clustermap(group_dir: str, title: str) -> None:
     """
-    Display a clustermap showing similarity between diagnoses based on shared significant correlation pairs.
+    Display a clustermap showing similarity between diagnoses based on shared
+    significant correlation pairs.
 
     Parameters:
         group_dir (str): Path to the folder with *_cor.csv files.
@@ -236,11 +233,16 @@ def plot_similarity_clustermap(group_dir: str, title: str) -> None:
     for diag1, diag2 in itertools.combinations(diagnoses, 2):
         common_pairs = diag_to_pairs[diag1] & diag_to_pairs[diag2]
         total_significant_pairs = len(diag_to_pairs[diag1]) + len(diag_to_pairs[diag2])
-        geometric_mean_filtered = np.sqrt(total_significant_pairs / 2) if total_significant_pairs > 0 else 1
-        normalized_value = len(common_pairs) / geometric_mean_filtered if geometric_mean_filtered > 0 else 0
+        geometric_mean_filtered = (
+            np.sqrt(total_significant_pairs / 2) if total_significant_pairs > 0 else 1
+        )
+        normalized_value = (
+            len(common_pairs) / geometric_mean_filtered
+            if geometric_mean_filtered > 0
+            else 0
+        )
         similarity_matrix.loc[diag1, diag2] = float(normalized_value)
         similarity_matrix.loc[diag2, diag1] = float(normalized_value)
-
 
     np.fill_diagonal(similarity_matrix.values, 0.0)
 
@@ -253,7 +255,7 @@ def plot_similarity_clustermap(group_dir: str, title: str) -> None:
         vmin=0,
         vmax=1,
         annot_kws={"size": 6},
-        figsize=(10, 8)
+        figsize=(10, 8),
     )
     cmap.ax_heatmap.set_title(title, fontsize=14, pad=20)
     plt.show()

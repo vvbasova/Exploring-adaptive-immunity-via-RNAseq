@@ -1,2 +1,2 @@
-survival
-survminer
+survival==3.8‑3
+survminer==0.5.0
